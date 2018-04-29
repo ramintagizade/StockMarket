@@ -6,7 +6,7 @@ var webpack  =  require("webpack");
 var webpackMiddleware =  require("webpack-dev-middleware");
 var webpackHotMiddleware  = require ("webpack-hot-middleware");
 var config  =  require("./webpack.config.js");
-//var api = require("./api");
+var api = require("./api");
 var bodyParser = require("body-parser");
 
 
@@ -18,7 +18,7 @@ app.use(favicon(path.join(__dirname,'dist','favicon.ico')));
 app.use(compression());
 app.use(bodyParser.json());
 
-//app.use('/', api());
+app.use('/', api());
 
 if (isDevelopment) {
   const compiler = webpack(config);

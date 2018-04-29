@@ -1,7 +1,7 @@
 {
   "name": "stock-market",
   "version": "1.0.0",
-  "description": "Real Time Display of Stock Market Trends",
+  "description": "Stock Market Quotes",
   "main": "index.js",
   "scripts": {
     "build": "NODE_ENV=production webpack -p --progress --colors --config ./webpack.prod.config.js",
@@ -33,6 +33,7 @@
     "connect-history-api-fallback": "^1.5.0",
     "css-loader": "^0.28.11",
     "express": "^4.16.3",
+    "highcharts": "^6.1.0",
     "history": "^4.7.2",
     "html-webpack-plugin": "^3.1.0",
     "moment": "^2.22.0",
