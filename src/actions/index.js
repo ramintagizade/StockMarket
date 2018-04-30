@@ -2,7 +2,9 @@ import {stockService} from '../services/index';
 
 export const stockActions = {
 	getStockByTime,
-	addStockCode
+	addStockCode,
+	getAllStocks,
+	removeStock
 };
 
 function getStockByTime(quote,time) {
@@ -69,6 +71,73 @@ function addStockCode(code) {
 	function failure(err) {
 		return {
 			type:"ADD_STOCK_CODE_FAILURE",
+			err
+		};
+	}
+}
+function getAllStocks() {
+	return dispatch => {
+		dispatch(request());
+		stockService.getAllStocks().then(data  => {
+			if(data.ok) {
+				dispatch(success(data.message));
+			}
+			else {
+				dispatch(failure(data.message));
+			}
+		});
+	}
+
+	function request() {
+		return {
+			type:"GET_STOCKS_REQUEST",
+		};
+	}
+
+	function success(stocks) {
+		return {
+			type:"GET_STOCKS_SUCCESS",
+			data: {stocks} 
+		};
+	}
+
+	function failure(err) {
+		return {
+			type:"GET_STOCKS_FAILURE",
+			err
+		};
+	}
+}
+function removeStock(symbol) {
+	return dispatch => {
+		dispatch(request(symbol));
+		stockService.removeStock(symbol).then(data  => {
+			if(data.ok) {
+				dispatch(success(data.message));
+			}
+			else {
+				dispatch(failure(data.message));
+			}
+		});
+	}
+
+	function request(symbol) {
+		return {
+			type:"DELETE_STOCK_REQUEST",
+			symbol
+		};
+	}
+
+	function success(symbol) {
+		return {
+			type:"DELETE_STOCK_SUCCESS",
+			data: symbol 
+		};
+	}
+
+	function failure(err) {
+		return {
+			type:"DELETE_STOCK_FAILURE",
 			err
 		};
 	}

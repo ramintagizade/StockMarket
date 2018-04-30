@@ -55,5 +55,32 @@ module.exports = (() => {
 			next();
 		});
 	});
+
+	api.post("/allStocks",function(req,res,next){
+		res.setHeader("Content-Type","application/json");
+		stock.getAllStocks().then(data => {
+			if(data) {
+				res.send(JSON.stringify(data));
+				next();
+			}
+		}).catch(err=>{
+			res.send(JSON.stringify(err));
+			next();
+		});
+	});
+
+	api.delete("/deleteStock/id", function(req,res,next){
+		res.setHeader("Content-Type","application/json");
+		stock.removeStock(req.body.symbol).then(msg => {
+			if(msg){
+				res.send(JSON.stringify(msg));
+				next();
+			}
+		}).catch(err=>{
+			res.send(JSON.stringify(err));
+			next();
+		})
+	});
+
 	return api;
 });

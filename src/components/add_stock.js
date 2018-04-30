@@ -7,10 +7,41 @@ class AddStock extends React.Component {
 		super(props);
 		this.state = {
 			stocks:[],
-			add_stock:""
+			add_stock:"",
+			gotStocksState:false,
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.submit = this.submit.bind(this);
+	}
+	componentDidMount() {
+		this.props.dispatch(stockActions.getAllStocks());
+	}
+	componentDidUpdate(prevProps,prevState) {
+		if((prevProps.addStockCode!=this.props.addStockCode) && this.props.addStockCode["added_stock_code"]) {
+			let stocks = [...this.state.stocks];
+			const {symbol,companyName,industry} = this.props.addStockCode.stock.code;
+			stocks.push({symbol,companyName,industry});
+			this.setState({
+				stocks:stocks
+			});
+		}
+		if(!this.state.gotStocksState && (prevProps.stocks!=this.props.getAllStocks) && this.props.getAllStocks["got_stocks"]) {
+			let stocks = this.props.getAllStocks.stocks.stocks;
+			this.setState({
+				stocks:stocks,
+				gotStocksState:true
+			});
+		}
+		if(prevProps.removeStock!=this.props.removeStock && this.props.removeStock["deleted_stock"]){
+			let symbol = this.props.removeStock.stock.data.symbol;
+			let stocks = [...this.state.stocks];
+			stocks = stocks.filter((x)=> {
+				return symbol!=x.symbol;
+			});
+			this.setState({
+				stocks:stocks
+			});
+		}
 	}
 	handleChange(e) {
 		let {value}  = e.target;
@@ -23,10 +54,19 @@ class AddStock extends React.Component {
 		if(stockCode) 
 			this.props.dispatch(stockActions.addStockCode(stockCode));
 	}
+	removeStock(i) {
+		
+		let stocks = [...this.state.stocks];
+		this.props.dispatch(stockActions.removeStock(stocks[i].symbol));
+		
+	}
 	render() {
+		var self = this;
 		var stocks = this.state.stocks.map(function (stk , i) {
 			return <div className="stock" key={i}> 
-				<p> Stock Name </p>
+				<button type="button" className="close" onClick={self.removeStock.bind(self,i)}>×</button>	
+				<p> <strong>{stk && stk.symbol} </strong></p>
+				<p>{stk && stk.companyName },{stk &&  stk.industry }</p>
 			</div>
 		});
 
@@ -49,9 +89,9 @@ class AddStock extends React.Component {
 }
 
 function mapStateToProps(state) {
-	const {add_stock} = state;
+	const {addStockCode,getAllStocks,removeStock} = state;
 	return {
-		add_stock
+		addStockCode,getAllStocks,removeStock
 	};
 }
 

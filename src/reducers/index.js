@@ -30,9 +30,48 @@ export function addStockCode(state = {}  , action) {
 		case "ADD_STOCK_CODE_SUCCESS" : 
 			return {
 				added_stock_code:true,
-				action
+				stock:action.data
 			};
 		case "ADD_STOCK_CODE_FAILURE" :
+			return {
+				error:action
+			}
+		default :
+			return state;
+	} 
+}
+export function getAllStocks(state = {}  , action) {
+	switch(action.type) {
+		case "GET_STOCKS_REQUEST" : 
+			return {
+				getting_stocks: true,
+				action
+			};
+		case "GET_STOCKS_SUCCESS" : 
+			return {
+				got_stocks:true,
+				stocks:action.data
+			};
+		case "GET_STOCKS_FAILURE" :
+			return {
+				error:action
+			}
+		default :
+			return state;
+	} 
+}
+export function removeStock(state = {}  , action) {
+	switch(action.type) {
+		case "DELETE_STOCK_REQUEST" : 
+			return {
+				deleting_stock: true,
+			};
+		case "DELETE_STOCK_SUCCESS" : 
+			return {
+				deleted_stock:true,
+				stock:action
+			};
+		case "DELETE_STOCK_FAILURE" :
 			return {
 				error:action
 			}

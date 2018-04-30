@@ -1,6 +1,8 @@
 export const stockService = {
 	getStockByTime,
-	addStockCode
+	addStockCode,
+	getAllStocks,
+	removeStock
 };
 
 function getStockByTime(quote,time) {
@@ -38,7 +40,36 @@ function addStockCode(code) {
 		}
 		return res.json();
 	}).then(data => {
-		console.log("receiv data " + JSON.stringify(data));
+		return data;
+	});
+}
+function getAllStocks() {
+	const opts = {
+		method:"POST",
+		headers: {"Content-Type": "application/json"},
+		body:JSON.stringify({})
+	};
+	return fetch("/allStocks",opts).then(res => {
+		if(!res.ok) {
+			return Promise.reject(res.statusText);
+		}
+		return res.json();
+	}).then(data => {
+		return data;
+	});
+}
+function removeStock(symbol) {
+	const opts = {
+		method:"DELETE",
+		headers: {"Content-Type": "application/json"},
+		body:JSON.stringify({symbol})
+	};
+	return fetch("/deleteStock/id",opts).then(res => {
+		if(!res.ok) {
+			return Promise.reject(res.statusText);
+		}
+		return res.json();
+	}).then(data => {
 		return data;
 	});
 }
