@@ -2,3 +2,33 @@
 	height: 400px; 
 	min-width: 310px;
 }
+.add_stock  {
+	float: left;
+	width: 30%;
+	border: 2px solid green;
+	border-radius: 5px;
+	background: #fff;
+	height: 80px;
+	margin-left: 30px;
+}
+.stock {
+	float: left;
+	width: 30%;
+	border: 2px solid gray;
+	border-radius: 5px;
+	background: #fff;
+	height: 80px;
+	margin-left:30px;
+	margin-bottom: 10px;
+}
+.add_stock .form-group{
+	margin:5px;	
+}
+.add_stock input {
+	width: 85%;
+}
+.add_stock .btn {
+	float: right;
+	margin-top: -34px;
+	margin-left: 30px;
+}

@@ -1,5 +1,6 @@
 export const stockService = {
-	getStockByTime
+	getStockByTime,
+	addStockCode
 };
 
 function getStockByTime(quote,time) {
@@ -21,6 +22,23 @@ function getStockByTime(quote,time) {
 		return res.json();	
 	}).then(data => {
 		console.log("rece " + JSON.stringify(data));
+		return data;
+	});
+}
+
+function addStockCode(code) {
+	const opts = {
+		method:"POST",
+		headers: {"Content-Type": "application/json"},
+		body:JSON.stringify({code})
+	};
+	return fetch("/addStockCode",opts).then(res => {
+		if(!res.ok) {
+			return Promise.reject(res.statusText);
+		}
+		return res.json();
+	}).then(data => {
+		console.log("receiv data " + JSON.stringify(data));
 		return data;
 	});
 }

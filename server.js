@@ -8,7 +8,8 @@ var webpackHotMiddleware  = require ("webpack-hot-middleware");
 var config  =  require("./webpack.config.js");
 var api = require("./api");
 var bodyParser = require("body-parser");
-
+const socketIO = require('socket.io');
+var http = require("http");
 
 var isDevelopment = process.env.NODE_ENV !== 'production';
 var port = isDevelopment ? 3000 : process.env.PORT;
@@ -41,9 +42,15 @@ else {
   });
 }
 
-app.listen(port, function onStart(err) {
+const server = http.createServer(app);
+var io = socketIO(server);
+
+server.listen(port, function onStart(err) {
   if (err) {
     console.log(err);
   }
   console.info('==> 🌎 Server Listens on port .', port);
 });
+
+module.exports = io;
+require("./socket/index.js");

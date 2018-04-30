@@ -3,6 +3,8 @@ require("../../styles/index.scss");
 var Highcharts = require('highcharts/highstock');
 import {stockActions} from '../actions/index';
 import {connect} from 'react-redux';
+import AddStock from "./add_stock";
+import socketIOClient from 'socket.io-client';
 
 require('highcharts/modules/exporting')(Highcharts);
 
@@ -24,6 +26,9 @@ class StockMarket extends React.Component {
 	componentDidMount() {
 		//addFunnel(Highcharts);
 		this.getData();
+		var socket = socketIOClient("http://localhost:3000");
+		socket.emit("change" , "me");
+
 	}
 	componentDidUpdate(prevProps,prevState) {
 		if(prevState.selectRange!=this.state.selectRange) {
@@ -87,8 +92,15 @@ class StockMarket extends React.Component {
 
 	}
 	render() {
+		var socket = socketIOClient("http://localhost:3000");
+		socket.on("change",(state) => {
+			alert("chagne " + state);
+		});
 		return (
+			<div>
 			<div id="container"></div>
+				<AddStock />
+			</div>
 		);
 	}
 }

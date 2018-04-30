@@ -43,5 +43,17 @@ module.exports = (() => {
 		});
 	});
 
+	api.post("/addStockCode", function(req,res,next) {
+		res.setHeader("Content-Type","application/json");
+		stock.addStockCode(req.body.code).then(data => {
+			if(data) {
+				res.send(JSON.stringify(data));
+				next();
+			}
+		}).catch(err => {
+			res.send(JSON.stringify(err));
+			next();
+		});
+	});
 	return api;
 });

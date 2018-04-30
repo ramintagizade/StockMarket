@@ -1,7 +1,7 @@
 import {combineReducers} from 'redux';
-import {getStockByTime} from "./index";
+import {getStockByTime,addStockCode} from "./index";
 const rootReducer = combineReducers({
-	getStockByTime
+	getStockByTime,addStockCode
 });
 
 export default rootReducer;

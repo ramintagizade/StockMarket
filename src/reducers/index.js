@@ -19,3 +19,24 @@ export function getStockByTime(state={},action) {
 			return state;
 	}
 }
+
+export function addStockCode(state = {}  , action) {
+	switch(action.type) {
+		case "ADD_STOCK_CODE_REQUEST" : 
+			return {
+				adding_stock_code: true,
+				action
+			};
+		case "ADD_STOCK_CODE_SUCCESS" : 
+			return {
+				added_stock_code:true,
+				action
+			};
+		case "ADD_STOCK_CODE_FAILURE" :
+			return {
+				error:action
+			}
+		default :
+			return state;
+	} 
+}
