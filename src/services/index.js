@@ -23,7 +23,6 @@ function getStockByTime(quote,time) {
 		}
 		return res.json();	
 	}).then(data => {
-		console.log("rece " + JSON.stringify(data));
 		return data;
 	});
 }

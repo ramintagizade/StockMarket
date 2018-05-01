@@ -9,7 +9,7 @@ export function getStockByTime(state={},action) {
 		case "GET_STOCK_TIME_SUCCESS" : 
 			return {
 				got_stock:true,
-				action
+				stock:action
 			};
 		case "GET_STOCK_TIME_FAILURE" : 
 			return {

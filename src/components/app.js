@@ -12,29 +12,56 @@ class StockMarket extends React.Component {
 	constructor(props) {
 		super(props);
 		this.state = {
-			selectRange:"hour",
-			data : [
-				[new Date("2018-04-27 15:58:00").getTime(),
-	           	parseFloat("95.8350")],
-	        	[new Date("2018-04-27 15:59:00").getTime(), 
-	            parseFloat("95.8800")],
-	        	[new Date("2018-04-27 16:00:00").getTime(), 
-	            parseFloat("95.9900")]
-			]
+			selectRange:"year",
+			data : [],
+			stocks:[],
+			quote:"",
+			getDataRender:false,
 		};
 	}
 	componentDidMount() {
-		//addFunnel(Highcharts);
-		this.getData();
-		var socket = socketIOClient("http://localhost:3000");
-		socket.emit("change" , "me");
-
+		//var socket = socketIOClient("http://localhost:3000");
+		//socket.emit("change" , "me");
 	}
 	componentDidUpdate(prevProps,prevState) {
 		if(prevState.selectRange!=this.state.selectRange) {
+			this.setState({
+				getDataRender:false
+			});
 			console.log("update");
-			//this.chart.series[0].setData(this.state.data,true);
-			this.props.dispatch(stockActions.getStockByTime("gold",this.state.selectRange));
+			let stocks = this.state.stocks;
+			for(let i=0;i<stocks.length;i++)
+				this.props.dispatch(stockActions.getStockByTime(stocks[i].symbol,this.state.selectRange));
+		}
+		if(prevProps.getAllStocks!=this.props.getAllStocks && this.props.getAllStocks["got_stocks"]) {
+			this.setState({
+				stocks:this.props.getAllStocks.stocks.stocks
+			},function(){
+				let stocks = this.state.stocks;
+				for(let i=0;i<stocks.length;i++)
+					this.props.dispatch(stockActions.getStockByTime(stocks[i].symbol,this.state.selectRange));
+			});
+		}
+		if(prevProps.getStockByTime!=this.props.getStockByTime && this.props.getStockByTime["got_stock"]) {
+			var self = this;
+			this.setState({
+				data:this.props.getStockByTime.stock.data.stock,
+				quote:this.props.getStockByTime.stock.data.quote
+			},function(){
+		
+				if(!this.state.getDataRender) {
+					this.getData(); 
+					this.setState({
+						getDataRender:true
+					});
+				}
+				this.chart.addSeries({                        
+				    name: this.state.quote,
+				    data: this.state.data,
+				}, false);
+				this.chart.redraw();
+			});
+
 		}
 	} 
 	getData() {
@@ -61,16 +88,9 @@ class StockMarket extends React.Component {
 			        },
 
 			        title: {
-			            text: 'AAPL Stock Price'
+			            text: 'Stocks'
 			        },
-
-			        series: [{
-			            name: 'AAPL',
-			            data: self.state.data,
-			            tooltip: {
-			                valueDecimals: 2
-			            }
-			        }],
+			        
 			        xAxis: {
 				    	events: {
 				    		setExtremes: function(e) {
@@ -92,6 +112,7 @@ class StockMarket extends React.Component {
 
 	}
 	render() {
+
 		var socket = socketIOClient("http://localhost:3000");
 		socket.on("change",(state) => {
 			alert("chagne " + state);
@@ -105,9 +126,9 @@ class StockMarket extends React.Component {
 	}
 }
 function mapStateToProps(state) {
-	const {getStockByTime} = state;
+	const {getStockByTime,getAllStocks} = state;
 	return {
-		getStockByTime
+		getStockByTime,getAllStocks
 	};
 }
 StockMarket = connect(mapStateToProps)(StockMarket);

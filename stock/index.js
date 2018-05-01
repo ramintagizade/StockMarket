@@ -15,6 +15,16 @@ function getStockByTime(quote,time) {
 			return data.json();
 		}).then(res => {
 			if(res) {
+			
+				res = res.map((x,i) => {
+					let date = x.minute ? x.date.substr(0,4)+"-"+x.date.substr(4,2)+"-"+x.date.substr(6,2) +" " + x.minute : x.date
+					let price = x.high;
+					let parseRes = [
+						new Date(date).getTime(),
+						parseFloat(price)
+					];
+					return parseRes;
+				});
 				resolve({ok:true,message:res});
 			}
 		}).catch(err => {
