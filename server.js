@@ -53,4 +53,4 @@ server.listen(port, function onStart(err) {
 });
 
 module.exports = io;
-//require("./socket/index.js");
+require("./socket/index.js");

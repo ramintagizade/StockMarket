@@ -1,6 +1,9 @@
 import React from 'react';
 import {connect} from 'react-redux';
 import {stockActions} from '../actions/index';
+import socketIOClient from 'socket.io-client';
+
+var socket = socketIOClient("http://localhost:3000");
 
 class AddStock extends React.Component {
 	constructor(props) {
@@ -12,9 +15,14 @@ class AddStock extends React.Component {
 		};
 		this.handleChange = this.handleChange.bind(this);
 		this.submit = this.submit.bind(this);
+		this.handleSocketAddStock = this.handleSocketAddStock.bind(this);
+		this.handleSocketRemoveStock = this.handleSocketRemoveStock.bind(this);
 	}
+
 	componentDidMount() {
 		this.props.dispatch(stockActions.getAllStocks());
+		socket.on("add_stock", this.handleSocketAddStock);
+		socket.on("remove_stock",this.handleSocketRemoveStock);
 	}
 	componentDidUpdate(prevProps,prevState) {
 		if((prevProps.addStockCode!=this.props.addStockCode) && this.props.addStockCode["added_stock_code"]) {
@@ -22,9 +30,10 @@ class AddStock extends React.Component {
 			const {symbol,companyName,industry} = this.props.addStockCode.stock.code;
 			stocks.push({symbol,companyName,industry});
 			this.setState({
-				stocks:stocks
+				stocks:stocks,
 			});
 		}
+		
 		if(!this.state.gotStocksState && (prevProps.stocks!=this.props.getAllStocks) && this.props.getAllStocks["got_stocks"]) {
 			let stocks = this.props.getAllStocks.stocks.stocks;
 			this.setState({
@@ -42,6 +51,7 @@ class AddStock extends React.Component {
 				stocks:stocks
 			});
 		}
+		
 	}
 	handleChange(e) {
 		let {value}  = e.target;
@@ -60,7 +70,36 @@ class AddStock extends React.Component {
 		this.props.dispatch(stockActions.removeStock(stocks[i].symbol));
 		
 	}
+	componentWillUnmount() {
+		socket.removeListener('add_stock',this.handleSocketAddStock);
+		socket.removeListener("remove_stock",this.handleSocketRemoveStock);
+	}
+	handleSocketAddStock(data) {
+		let stocks = [...this.state.stocks];
+		const {symbol,companyName,industry} = data.code;
+		
+		let exists = stocks.filter(x=> {
+			return symbol==x.symbol
+		});
+		if(!exists.length) {
+			stocks.push({symbol,companyName,industry});
+			this.setState({
+				stocks:stocks
+			});
+		}
+	}
+	handleSocketRemoveStock(data){
+		let symbol = data.symbol;
+		let stocks = [...this.state.stocks];
+		stocks = stocks.filter((x)=> {
+			return symbol!=x.symbol;
+		});
+		this.setState({
+			stocks:stocks
+		});
+	}
 	render() {
+		
 		var self = this;
 		var stocks = this.state.stocks.map(function (stk , i) {
 			return <div className="stock" key={i}> 

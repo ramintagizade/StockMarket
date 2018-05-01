@@ -1,3 +1,4 @@
+import socketIOClient from 'socket.io-client';
 
 export function getStockByTime(state={},action) {
 	switch(action.type) {
@@ -28,6 +29,10 @@ export function addStockCode(state = {}  , action) {
 				action
 			};
 		case "ADD_STOCK_CODE_SUCCESS" : 
+			// emit data  
+			var socket = socketIOClient("http://localhost:3000");
+			socket.emit("add_stock" , action.data);
+			
 			return {
 				added_stock_code:true,
 				stock:action.data
@@ -67,6 +72,10 @@ export function removeStock(state = {}  , action) {
 				deleting_stock: true,
 			};
 		case "DELETE_STOCK_SUCCESS" : 
+			// emit data  
+			var socket = socketIOClient("http://localhost:3000");
+			socket.emit("remove_stock" , action.data);
+
 			return {
 				deleted_stock:true,
 				stock:action
