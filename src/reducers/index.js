@@ -30,7 +30,9 @@ export function addStockCode(state = {}  , action) {
 			};
 		case "ADD_STOCK_CODE_SUCCESS" : 
 			// emit data  
-			var socket = socketIOClient("http://localhost:3000");
+			var protocol = window.location.protocol;
+			var host = window.location.host;
+			var socket = socketIOClient(protocol+"//"+host);
 			socket.emit("add_stock" , action.data);
 			
 			return {
@@ -73,7 +75,9 @@ export function removeStock(state = {}  , action) {
 			};
 		case "DELETE_STOCK_SUCCESS" : 
 			// emit data  
-			var socket = socketIOClient("http://localhost:3000");
+			var protocol = window.location.protocol;
+			var host = window.location.host;
+			var socket = socketIOClient(protocol+"//"+host);
 			socket.emit("remove_stock" , action.data);
 
 			return {

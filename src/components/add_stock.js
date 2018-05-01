@@ -3,7 +3,9 @@ import {connect} from 'react-redux';
 import {stockActions} from '../actions/index';
 import socketIOClient from 'socket.io-client';
 
-var socket = socketIOClient("http://localhost:3000");
+var protocol = window.location.protocol;
+var host = window.location.host;
+var socket = socketIOClient(protocol+"//"+host);
 
 class AddStock extends React.Component {
 	constructor(props) {

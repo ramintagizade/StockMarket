@@ -18,10 +18,7 @@ class StockMarket extends React.Component {
 			getDataRender:false,
 		};
 	}
-	componentDidMount() {
-		//var socket = socketIOClient("http://localhost:3000");
-		//socket.emit("change" , "me");
-	}
+	
 	componentDidUpdate(prevProps,prevState) {
 		if(prevState.selectRange!=this.state.selectRange) {
 			this.setState({
@@ -90,6 +87,9 @@ class StockMarket extends React.Component {
 			            text: 'Stocks'
 			        },
 			        
+    				 scrollbar: {
+      					enabled: false
+    				},
 			        xAxis: {
 				    	events: {
 				    		setExtremes: function(e) {
